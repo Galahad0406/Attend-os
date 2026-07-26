@@ -101,6 +101,8 @@ export default function AttendanceManager({ onBack }: AttendanceManagerProps) {
           <button
             onClick={onBack}
             className="flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors duration-150"
+            <ArrowLeft size={16} />
+            <span>Back to Dashboard</span>
           >
           </button>
           
