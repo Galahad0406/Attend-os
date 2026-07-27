@@ -1,13 +1,11 @@
 import { useState } from "react";
 import { 
-  ArrowLeft, 
   Search, 
   CheckCircle2, 
   XCircle, 
   UserCheck, 
   AlertCircle, 
-  Calendar,
-  Sparkles
+  Calendar
 } from "lucide-react";
 
 // Attendance status types (Present / Absent)
@@ -16,8 +14,6 @@ type AttendanceStatus = "present" | "absent";
 interface Student {
   id: number;
   name: string;
-  studentId: string;
-  program: string;
   status: AttendanceStatus;
   lastUpdated?: string;
   avatarBg: string;
@@ -34,14 +30,14 @@ const avatarColors = [
 
 // Dummy Student Data
 const initialStudents: Student[] = [
-  { id: 1, name: "Minjun Kim", studentId: "STU-2026-001", program: "Dynamic Afterschool", status: "present", avatarBg: avatarColors[0] },
-  { id: 2, name: "Jiwon Lee", studentId: "STU-2026-002", program: "TKD", status: "present", avatarBg: avatarColors[1] },
-  { id: 3, name: "Seojun Park", studentId: "STU-2026-003", program: "Dynamic Afterschool", status: "absent", avatarBg: avatarColors[2] },
-  { id: 4, name: "Yujin Choi", studentId: "STU-2026-004", program: "Trial", status: "present", avatarBg: avatarColors[3] },
-  { id: 5, name: "Haeun Jung", studentId: "STU-2026-005", program: "TKD", status: "present", avatarBg: avatarColors[4] },
-  { id: 6, name: "Hyunwoo Kang", studentId: "STU-2026-006", program: "Dynamic Afterschool", status: "absent", avatarBg: avatarColors[5] },
-  { id: 7, name: "Dohyun Yoon", studentId: "STU-2026-007", program: "Trial", status: "present", avatarBg: avatarColors[0] },
-  { id: 8, name: "Sohee Han", studentId: "STU-2026-008", program: "TKD", status: "present", avatarBg: avatarColors[1] },
+  { id: 1, name: "Minjun Kim", status: "present", avatarBg: avatarColors[0] },
+  { id: 2, name: "Jiwon Lee", status: "present", avatarBg: avatarColors[1] },
+  { id: 3, name: "Seojun Park", status: "absent", avatarBg: avatarColors[2] },
+  { id: 4, name: "Yujin Choi", status: "present", avatarBg: avatarColors[3] },
+  { id: 5, name: "Haeun Jung", status: "present", avatarBg: avatarColors[4] },
+  { id: 6, name: "Hyunwoo Kang", status: "absent", avatarBg: avatarColors[5] },
+  { id: 7, name: "Dohyun Yoon", status: "present", avatarBg: avatarColors[0] },
+  { id: 8, name: "Sohee Han", status: "present", avatarBg: avatarColors[1] },
 ];
 
 export default function AttendanceManager({ onBack }: AttendanceManagerProps) {
@@ -57,7 +53,12 @@ export default function AttendanceManager({ onBack }: AttendanceManagerProps) {
           const updated: Student = {
             ...student,
             status: newStatus,
-            lastUpdated: new Date().toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit" }),
+            // Virginia Time (America/New_York)
+            lastUpdated: new Date().toLocaleTimeString("en-US", { 
+              hour: "2-digit", 
+              minute: "2-digit",
+              timeZone: "America/New_York"
+            }),
           };
           
           // Main OS sync integration point
@@ -77,17 +78,18 @@ export default function AttendanceManager({ onBack }: AttendanceManagerProps) {
 
   // Filter students
   const filteredStudents = students.filter((student) => {
-    const matchesSearch = student.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                          student.studentId.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = student.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesFilter = filter === "all" || student.status === filter;
     return matchesSearch && matchesFilter;
   });
 
+  // Virginia Date (America/New_York)
   const todayDate = new Date().toLocaleDateString("en-US", {
     weekday: "short",
     year: "numeric",
     month: "short",
     day: "numeric",
+    timeZone: "America/New_York"
   });
 
   return (
@@ -100,10 +102,9 @@ export default function AttendanceManager({ onBack }: AttendanceManagerProps) {
         <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
           <button
             onClick={onBack}
-            className="flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors duration-150"
+            className="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors duration-150"
           >
-            <ArrowLeft size={16} />
-            <span>Back to Dashboard</span>
+            <span>Dynamic Afterschool</span>
           </button>
           
           <div className="flex items-center gap-2 text-xs font-medium text-slate-500 bg-slate-100 px-3 py-1.5 rounded-full">
@@ -116,15 +117,9 @@ export default function AttendanceManager({ onBack }: AttendanceManagerProps) {
       <main className="max-w-5xl mx-auto px-6 py-10">
         {/* Header */}
         <header className="mb-8">
-          <p className="text-xs font-medium text-blue-600 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
-            <Sparkles size={14} /> Attendance OS
-          </p>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900 mb-1">
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900">
             Student Attendance
           </h1>
-          <p className="text-sm text-slate-500 font-normal">
-            Click status toggles to update attendance in real-time.
-          </p>
         </header>
 
         {/* Apple Style Summary Stats */}
@@ -167,7 +162,7 @@ export default function AttendanceManager({ onBack }: AttendanceManagerProps) {
             <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
-              placeholder="Search student or ID..."
+              placeholder="Search student..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full pl-9 pr-4 py-2 text-sm bg-white border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-150"
@@ -225,21 +220,12 @@ export default function AttendanceManager({ onBack }: AttendanceManagerProps) {
                     {student.name.slice(0, 1)}
                   </div>
                   <div>
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-base font-semibold tracking-tight text-slate-900">{student.name}</h3>
-                      <span className="text-xs px-2 py-0.5 rounded-md bg-slate-100 text-slate-500 font-mono">
-                        {student.studentId}
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-slate-400 mt-0.5">
-                      <span>{student.program}</span>
-                      {student.lastUpdated && (
-                        <>
-                          <span>•</span>
-                          <span>Updated: {student.lastUpdated}</span>
-                        </>
-                      )}
-                    </div>
+                    <h3 className="text-base font-semibold tracking-tight text-slate-900">{student.name}</h3>
+                    {student.lastUpdated && (
+                      <p className="text-xs text-slate-400 mt-0.5">
+                        Updated: {student.lastUpdated}
+                      </p>
+                    )}
                   </div>
                 </div>
 
