@@ -30,14 +30,14 @@ const avatarColors = [
 
 // Dummy Student Data
 const initialStudents: Student[] = [
-  { id: 1, name: "Minjun Kim", status: "present", avatarBg: avatarColors[0] },
-  { id: 2, name: "Jiwon Lee", status: "present", avatarBg: avatarColors[1] },
-  { id: 3, name: "Seojun Park", status: "absent", avatarBg: avatarColors[2] },
-  { id: 4, name: "Yujin Choi", status: "present", avatarBg: avatarColors[3] },
-  { id: 5, name: "Haeun Jung", status: "present", avatarBg: avatarColors[4] },
-  { id: 6, name: "Hyunwoo Kang", status: "absent", avatarBg: avatarColors[5] },
-  { id: 7, name: "Dohyun Yoon", status: "present", avatarBg: avatarColors[0] },
-  { id: 8, name: "Sohee Han", status: "present", avatarBg: avatarColors[1] },
+  { id: 1, name: "Victor Kim", status: "present", avatarBg: avatarColors[0] },
+  { id: 2, name: "Lauren Kim", status: "present", avatarBg: avatarColors[1] },
+  { id: 3, name: "Eddie Kim", status: "absent", avatarBg: avatarColors[2] },
+  { id: 4, name: "Justin Kim", status: "present", avatarBg: avatarColors[3] },
+  { id: 5, name: "Test Name 1", status: "present", avatarBg: avatarColors[4] },
+  { id: 6, name: "Test Name 2", status: "absent", avatarBg: avatarColors[5] },
+  { id: 7, name: "Test Name 3", status: "present", avatarBg: avatarColors[0] },
+  { id: 8, name: "Test Name 4", status: "present", avatarBg: avatarColors[1] },
 ];
 
 export default function AttendanceManager({ onBack }: AttendanceManagerProps) {
